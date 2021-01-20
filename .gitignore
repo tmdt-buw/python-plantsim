@@ -1,0 +1,9 @@
+.idea
+
+__pycache__
+
+dist
+build
+
+# Do not track the egg-info dir which is only created when pip install -e
+plantsim.egg-info/
