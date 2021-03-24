@@ -102,6 +102,11 @@ class Plantsim:
 
         self.plantsim.SetValue(object_name, value)
 
+    def execute_simtalk(self, command_string):
+        # passed command_string to be executed in "SimTalk" starts from self.path_context
+        command_string = f'{self.path_context}.{command_string}'
+        self.plantsim.ExecuteSimTalk(command_string)
+
     def quit(self):
 
         self.plantsim.Quit()
