@@ -1,9 +1,11 @@
 import os
 import pandas as pd
 
+from loader.plantsim_loader import PlantsimLoader
+
 class PandasTable():
 
-    def __init__(self, plantsim, table_name, table_buffer_path=''):
+    def __init__(self, object_name, table_buffer_path=''):
         """
         Table mapping for PlantSim Tables (e.g., DataTable, ExplorerTable)
         - stores table in a .txt file in the python script directory
@@ -11,9 +13,9 @@ class PandasTable():
         :param plantsim: Plantsim instance (with loaded model) that is queried
         :param table_name: The object name within Plantsim relative to the current path context
         """
-        self.plantsim = plantsim
+        self.plantsim = PlantsimLoader.get_plantsim()
         self._table = None
-        self._table_name = table_name
+        self._table_name = object_name
         self._table_buffer_path = os.path.join(table_buffer_path, 'table_buffer')
 
         self.update()
