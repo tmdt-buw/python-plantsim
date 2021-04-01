@@ -103,7 +103,7 @@ class Plantsim:
         self.plantsim.SetValue(object_name, value)
 
     def execute_simtalk(self, command_string, parameter=None, from_path_context=True):
-        '''
+        """
         Execute a SimTalk command accodring to COM documentation:
         PlantSim.ExecuteSimTalk("->real; return 3.14159")
         PlantSim.ExecuteSimTalk("param r:real->real; return r*r", 3.14159)
@@ -111,16 +111,16 @@ class Plantsim:
         :param parameter: (optional); parameter, if command contains a parameter to be set
         :param from_path_context: if true, command should be formulated form the path context.
                                 Else, needs the whole path in the command
-        '''
+        """
         if from_path_context:
             command_string = f'{self.path_context}.{command_string}'
         else:
             command_string = f'.{command_string}'
 
-        if parameter == None:
-            self.plantsim.ExecuteSimTalk(command_string)
-        else:
+        if parameter:
             self.plantsim.ExecuteSimTalk(command_string, parameter)
+        else:
+            self.plantsim.ExecuteSimTalk(command_string)
 
 
     def quit(self):
