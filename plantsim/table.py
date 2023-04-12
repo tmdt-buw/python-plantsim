@@ -26,13 +26,14 @@ class Table:
         self.has_col_index = plantsim.get_value(f'{table_name}.ColumnIndex ')
         self.has_row_index = plantsim.get_value(f'{table_name}.RowIndex')
 
-        min_col_idx = 0
-        if not self.has_col_index:
-            min_col_idx = 1
+        min_col_idx = 1
+        min_row_idx = 1
+        
+        if self.has_col_index:
+            min_row_idx = 0
 
-        min_row_idx = 0
-        if not self.has_row_index:
-            min_row_idx = 1
+        if self.has_row_index:
+            min_col_idx = 0
 
         if row_count > 0 and col_count > 0:
             for row_idx in range(min_row_idx, row_count + 1):
@@ -42,7 +43,10 @@ class Table:
                     cell_value = plantsim.get_value(f'{table_name}[{col_idx}, {row_idx}]')
                     row.append(cell_value)
                     if self.has_col_index and row_idx > 0:
-                        col_header = self.rows[0][col_idx]
+                        if self.has_row_index:
+                            col_header = self._rows[0][col_idx]
+                        else:
+                            col_header = self._rows[0][col_idx-1]
                         row_coldict[col_header] = cell_value
                 self._rows.append(row)
                 if self.has_row_index and row_idx > 0:
