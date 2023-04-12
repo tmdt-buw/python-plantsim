@@ -77,6 +77,10 @@ class Plantsim:
 
         self.plantsim.StartSimulation(self.event_controller)
 
+    def is_simulation_running(self):
+
+        return self.plantsim.IsSimulationRunning()
+
     def get_object(self, object_name):
         # "Smart" getter that has some limited ability to decide which kind of object to return
 
