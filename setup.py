@@ -24,5 +24,5 @@ setuptools.setup(
         "Operating System :: Microsoft :: Windows",
     ],
     python_requires='>=3.8',
-    install_requires=['pywin32==225', 'texttable']
+    install_requires=['pywin32==306', 'texttable']
 )
