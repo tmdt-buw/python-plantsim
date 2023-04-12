@@ -22,18 +22,30 @@ class Table:
 
         row_count = plantsim.get_value(f'{table_name}.YDim')
         col_count = plantsim.get_value(f'{table_name}.XDim')
+
+        self.has_col_index = plantsim.get_value(f'{table_name}.ColumnIndex ')
+        self.has_row_index = plantsim.get_value(f'{table_name}.RowIndex')
+
+        min_col_idx = 0
+        if not self.has_col_index:
+            min_col_idx = 1
+
+        min_row_idx = 0
+        if not self.has_row_index:
+            min_row_idx = 1
+
         if row_count > 0 and col_count > 0:
-            for row_idx in range(row_count + 1):
+            for row_idx in range(min_row_idx, row_count + 1):
                 row = []
                 row_coldict = {}
-                for col_idx in range(col_count + 1):
+                for col_idx in range(min_col_idx, col_count + 1):
                     cell_value = plantsim.get_value(f'{table_name}[{col_idx}, {row_idx}]')
                     row.append(cell_value)
-                    if row_idx > 0:
+                    if self.has_col_index and row_idx > 0:
                         col_header = self.rows[0][col_idx]
                         row_coldict[col_header] = cell_value
                 self._rows.append(row)
-                if row_idx > 0:
+                if self.has_row_index and row_idx > 0:
                     self._rows_coldict.append(row_coldict)
 
     @property
@@ -47,10 +59,13 @@ class Table:
     @property
     def header(self) -> List:
         """
-        Returns header (first table row)
+        Returns header (first table row if any, else None)
         :return: list containing header elements
         """
-        return self.rows[0]
+        if self.has_row_index:
+            return self.rows[0]
+
+        return None
 
     @property
     def rows_body(self) -> List[List]:
@@ -58,20 +73,26 @@ class Table:
         Returns table data row-first indexed without header
         :return: 2-dim list containing table data row-first indexed without first row
         """
-        return self.rows[1:]
+        if self.has_row_index:
+            return self.rows[1:]
+
+        return self.rows
 
     @property
     def rows_coldict(self) -> List[Dict]:
         """
         Returns table data row-first indexed. Each column is a Dict with header as key
-        :return: list of dictionaries
+        :return: list of dictionaries or None if no headers
         """
-        return self._rows_coldict
+        if self.has_col_index:
+            return self._rows_coldict
+
+        return None
 
     @property
     def row_count(self) -> int:
         """
-        Returns total row count (including header)
+        Returns total row count (including header if any)
         :return: row count as integer
         """
         return len(self.rows)
@@ -152,7 +173,9 @@ class Table:
         if self.row_count > 0:
             texttable = Texttable(200)
             texttable.add_rows(self.rows)
-            texttable.set_deco(Texttable.HEADER)
+            texttable.set_deco(0)
+            if self.has_row_index:
+                texttable.set_deco(texttable.HEADER)
             return texttable.draw()
         else:
             return '<empty table>'
