@@ -18,6 +18,7 @@ table = Table(plantsim, 'TableName')
 print(table) 
 ```
 
+An example, together with a simple simulation model, can be found in [example](example/).
 
 ## Setup
 
